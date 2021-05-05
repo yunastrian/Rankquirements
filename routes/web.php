@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProjectController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,4 +18,8 @@ use App\Http\Controllers\HomeController;
 
 Auth::routes();
 
+// GET
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// POST
+Route::post('/project/add', [ProjectController::class, 'add']);
