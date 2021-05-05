@@ -10,6 +10,13 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+        @elseif( request()->get('msg') == 2 )
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                Member added successfully
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
         @endif
     @endisset
     <div class="row justify-content-center">
@@ -54,19 +61,23 @@
                 <div class="card-body">
                     <h5>Moderator:</h5>
                     <ul>
-                        <li>Coffee</li>
+                        <li>{{ $moderator }}</li>
                     </ul>
 
                     <h5 class="mt-4">Members:</h5>
+                    @if(count($members) == 0)
+                        <p class="font-italic">There is no members</p>
+                    @endif
                     <ul>
-                        <li>Coffee</li>
-                        <li>Coffee</li>
-                        <li>Coffee</li>
+                        @foreach($members as $member)
+                            <li>{{ $member }}</li>
+                        @endforeach
                     </ul>
-
-                    <button type="button" class="btn btn-primary mt-4" data-toggle="modal" data-target="#memberModal">
-                        Add Member
-                    </button>
+                    @if($role == 1)
+                        <button type="button" class="btn btn-primary mt-4" data-toggle="modal" data-target="#memberModal">
+                            Add Member
+                        </button>
+                    @endif
                 </div>
             </div>
         </div>
@@ -85,7 +96,7 @@
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <label for="projectName">Requirement statement</label>
+                                <label for="requirementName">Requirement statement</label>
                                 <input type="text" class="form-control" id="requirementName" required="required" name="requirementName">
                             </div>
                             <input type="hidden" id="projectId" name="projectId" value="{{ $id }}">
@@ -103,7 +114,7 @@
         <div class="modal fade" id="memberModal" tabindex="-1" aria-labelledby="memberModal" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
-                    <form action="/project/addMember" method="post">
+                    <form action="/project/addmember" method="post">
                         {{ csrf_field() }}
                         <div class="modal-header">
                             <h5 class="modal-title" id="memberModal">Add Member</h5>
@@ -113,8 +124,12 @@
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <label for="projectName">Pick user</label>
-                                <input type="text" class="form-control" id="requirementName" required="required" name="requirementName">
+                                <label for="memberId">Pick user</label>
+                                <select class="form-control" id="userId" name="userId">
+                                    @foreach($users as $user)
+                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <input type="hidden" id="projectId" name="projectId" value="{{ $id }}">
                         </div>
