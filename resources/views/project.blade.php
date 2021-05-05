@@ -13,7 +13,7 @@
         @endif
     @endisset
     <div class="row justify-content-center">
-        <div class="col-md-12">
+        <div class="col-md-8">
             <div class="card">
                 <div class="card-header font-weight-bold">Software Requirements</div>
 
@@ -47,7 +47,31 @@
                 </div>
             </div>
         </div>
-        <!-- Modal -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header font-weight-bold">Participants</div>
+
+                <div class="card-body">
+                    <h5>Moderator:</h5>
+                    <ul>
+                        <li>Coffee</li>
+                    </ul>
+
+                    <h5 class="mt-4">Members:</h5>
+                    <ul>
+                        <li>Coffee</li>
+                        <li>Coffee</li>
+                        <li>Coffee</li>
+                    </ul>
+
+                    <button type="button" class="btn btn-primary mt-4" data-toggle="modal" data-target="#memberModal">
+                        Add Member
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Requirement Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
@@ -62,6 +86,34 @@
                         <div class="modal-body">
                             <div class="form-group">
                                 <label for="projectName">Requirement statement</label>
+                                <input type="text" class="form-control" id="requirementName" required="required" name="requirementName">
+                            </div>
+                            <input type="hidden" id="projectId" name="projectId" value="{{ $id }}">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Member Modal -->
+        <div class="modal fade" id="memberModal" tabindex="-1" aria-labelledby="memberModal" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <form action="/project/addMember" method="post">
+                        {{ csrf_field() }}
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="memberModal">Add Member</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="projectName">Pick user</label>
                                 <input type="text" class="form-control" id="requirementName" required="required" name="requirementName">
                             </div>
                             <input type="hidden" id="projectId" name="projectId" value="{{ $id }}">
