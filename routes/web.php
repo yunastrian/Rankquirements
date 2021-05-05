@@ -20,6 +20,7 @@ Auth::routes();
 
 // GET
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/project/{id}', [ProjectController::class, 'index'])->name('project');
 
 // POST
 Route::post('/project/add', [ProjectController::class, 'add']);

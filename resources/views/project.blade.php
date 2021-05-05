@@ -15,36 +15,40 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header font-weight-bold">My Projects</div>
+                <div class="card-header font-weight-bold">Perangkat Lunak Ujian Daring</div>
 
                 <div class="card-body">
-                    @if(count($projects) == 0)
+                    <!-- @if(count($projects) == 0)
                         There is no project
-                    @else
+                    @else -->
                     <table class="table table-striped">
                         <thead>
                             <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Project Name</th>
-                            <th scope="col">Role</th>
-                            <th scope="col">Action</th>
+                            <th scope="col">Requirement</th>
+                            <th scope="col">Score</th>
                             </tr>
                         </thead>
                         <tbody>
-                        @foreach($projects as $index => $project)
+                            <tr>
+                                <th scope="row" class="align-middle">R1</th>
+                                <td class="align-middle">Sistem dapat menampilkan soal</td>
+                                <td class="align-middle">3.56</td>
+                            </tr>
+                        <!-- @foreach($projects as $index => $project)
                             <tr>
                                 <th scope="row" class="align-middle">{{ $index + 1 }}</th>
                                 <td class="align-middle">{{ $project['name'] }}</td>
                                 <td class="align-middle">{{ $project['role'] }}</td>
                                 <td class="align-middle"><a class="btn btn-primary" href="/project/{{ $project['id'] }}" role="button">Open</a></td>
                             </tr>
-                        @endforeach
+                        @endforeach -->
                         </tbody>
                     </table>
-                    @endif
+                    <!-- @endif -->
                     
                     <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#exampleModal">
-                        Add New Project
+                        Add Requirement
                     </button>
                 </div>
             </div>
@@ -53,17 +57,17 @@
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
-                    <form action="/project/add" method="post">
+                    <form action="/requirement/add" method="post">
                         {{ csrf_field() }}
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Add New Project</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">Add Requirement</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <label for="projectName">Project name</label>
+                                <label for="projectName">Requirement Statement</label>
                                 <input type="text" class="form-control" id="projectName" required="required" name="projectName">
                             </div>
                         </div>
