@@ -31,9 +31,9 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Requirement</th>
-                            <th scope="col">Score</th>
+                                <th scope="col">#</th>
+                                <th scope="col">Requirement</th>
+                                <th scope="col">Score</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -56,6 +56,48 @@
         </div>
         <div class="col-md-4">
             <div class="card">
+                <div class="card-header font-weight-bold">Phases</div>
+
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Phase</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-success">
+                                <th scope="row" class="align-middle">1</th>
+                                <td class="align-middle">Done</td>
+                                <td class="align-middle"><a class="btn btn-primary" href="#" role="button">Open</a></td>
+                            </tr>
+                            <tr class="table-primary">
+                                <th scope="row" class="align-middle">2</th>
+                                <td class="align-middle">WIP</td>
+                                <td class="align-middle"><a class="btn btn-primary" href="#" role="button">Open</a></td>
+                            </tr>
+                            <tr class="table-secondary">
+                                <th scope="row" class="align-middle">3</th>
+                                <td class="align-middle">Closed</td>
+                                <td class="align-middle"><a class="btn btn-primary" href="#" role="button">Open</a></td>
+                            </tr>
+                            <tr class="table-secondary">
+                                <th scope="row" class="align-middle">4</th>
+                                <td class="align-middle">Closed</td>
+                                <td class="align-middle"><a class="btn btn-primary" href="#" role="button">Open</a></td>
+                            </tr>
+                            <tr class="table-secondary">
+                                <th scope="row" class="align-middle">5</th>
+                                <td class="align-middle">Closed</td>
+                                <td class="align-middle"><a class="btn btn-primary" href="#" role="button">Open</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card mt-4">
                 <div class="card-header font-weight-bold">Participants</div>
 
                 <div class="card-body">
