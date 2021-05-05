@@ -5,7 +5,7 @@
     @isset(request()->msg)
         @if( request()->get('msg') == 1 )
             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                Project added successfully
+                Requirement added successfully
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -15,12 +15,12 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header font-weight-bold">Perangkat Lunak Ujian Daring</div>
+                <div class="card-header font-weight-bold">Software Requirements</div>
 
                 <div class="card-body">
-                    <!-- @if(count($projects) == 0)
-                        There is no project
-                    @else -->
+                    @if(count($requirements) == 0)
+                        There is no requirements
+                    @else
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -30,22 +30,16 @@
                             </tr>
                         </thead>
                         <tbody>
+                        @foreach($requirements as $requirement)
                             <tr>
-                                <th scope="row" class="align-middle">R1</th>
-                                <td class="align-middle">Sistem dapat menampilkan soal</td>
-                                <td class="align-middle">3.56</td>
+                                <th scope="row" class="align-middle">R{{ $requirement->number + 1 }}</th>
+                                <td class="align-middle">{{ $requirement->name }}</td>
+                                <td class="align-middle">{{ $requirement->score }}</td>
                             </tr>
-                        <!-- @foreach($projects as $index => $project)
-                            <tr>
-                                <th scope="row" class="align-middle">{{ $index + 1 }}</th>
-                                <td class="align-middle">{{ $project['name'] }}</td>
-                                <td class="align-middle">{{ $project['role'] }}</td>
-                                <td class="align-middle"><a class="btn btn-primary" href="/project/{{ $project['id'] }}" role="button">Open</a></td>
-                            </tr>
-                        @endforeach -->
+                        @endforeach
                         </tbody>
                     </table>
-                    <!-- @endif -->
+                    @endif
                     
                     <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#exampleModal">
                         Add Requirement
@@ -67,9 +61,10 @@
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <label for="projectName">Requirement Statement</label>
-                                <input type="text" class="form-control" id="projectName" required="required" name="projectName">
+                                <label for="projectName">Requirement statement</label>
+                                <input type="text" class="form-control" id="requirementName" required="required" name="requirementName">
                             </div>
+                            <input type="hidden" id="projectId" name="projectId" value="{{ $id }}">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

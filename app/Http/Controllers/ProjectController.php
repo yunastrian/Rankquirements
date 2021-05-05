@@ -21,9 +21,11 @@ class ProjectController extends Controller
     /**
      * Show the application dashboard.
      */
-    public function index()
+    public function index($id)
     {
-        return view('project');
+        $requirements = DB::table('requirements')->where('idProject', $id)->get();
+
+        return view('project', ['requirements' => $requirements, 'id' => $id]);
     }
 
     /**

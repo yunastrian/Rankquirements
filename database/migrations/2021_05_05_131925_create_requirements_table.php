@@ -18,7 +18,7 @@ class CreateRequirementsTable extends Migration
             $table->integer('idProject');
             $table->integer('number');
             $table->string('name');
-            $table->double('score', 8, 2);
+            $table->double('score', 8, 2)->nullable();;
             $table->timestamps();
         });
     }

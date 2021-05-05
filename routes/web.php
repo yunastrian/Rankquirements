@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\RequirementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,3 +25,4 @@ Route::get('/project/{id}', [ProjectController::class, 'index'])->name('project'
 
 // POST
 Route::post('/project/add', [ProjectController::class, 'add']);
+Route::post('/requirement/add', [RequirementController::class, 'add']);
