@@ -21,7 +21,7 @@
                     @else
                     <table class="table">
                         <thead>
-                            <tr class="table-active">
+                            <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Requirement</th>
                                 <th scope="col">Score</th>
@@ -53,7 +53,7 @@
                 <div class="card-body">
                     <table class="table">
                         <thead>
-                            <tr class="table-active">
+                            <tr>
                                 <th scope="col">Phase</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Action</th>
@@ -83,20 +83,22 @@
                             @endfor
                         </tbody>
                     </table>
-                    @if($project->phase <= $maxPhase)
-                        <form action="/project/updatephase" method="post">
-                        {{ csrf_field() }}
-                            <input type="hidden" id="projectId" name="projectId" value="{{ $id }}">
-                            <button type="submit" class="btn btn-success mt-1">
-                                @if($project->phase == 0)
-                                    Open phase 1
-                                @elseif($project->phase == $maxPhase)
-                                    Finish phase {{ $maxPhase }}
-                                @else
-                                    Finish phase {{ $project->phase }} and open phase {{ $project->phase + 1 }}
-                                @endif
-                            </button>
-                        </form>
+                    @if($role == 1)
+                        @if($project->phase <= $maxPhase)
+                            <form action="/project/updatephase" method="post">
+                            {{ csrf_field() }}
+                                <input type="hidden" id="projectId" name="projectId" value="{{ $id }}">
+                                <button type="submit" class="btn btn-success mt-1">
+                                    @if($project->phase == 0)
+                                        Open phase 1
+                                    @elseif($project->phase == $maxPhase)
+                                        Finish phase {{ $maxPhase }}
+                                    @else
+                                        Finish phase {{ $project->phase }} and open phase {{ $project->phase + 1 }}
+                                    @endif
+                                </button>
+                            </form>
+                        @endif
                     @endif
                 </div>
             </div>

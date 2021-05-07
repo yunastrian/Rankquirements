@@ -21,7 +21,7 @@
                     @else
                     <table class="table">
                         <thead>
-                            <tr class="table-active">
+                            <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Project Name</th>
                                 <th scope="col">Role</th>
