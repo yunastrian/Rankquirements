@@ -16,10 +16,11 @@
                 <div class="card-header font-weight-bold bg-primary text-white">Software Requirements</div>
 
                 <div class="card-body">
+                    Project name: <span class="font-weight-bold">{{ $project->name }}</span>
                     @if(count($requirements) == 0)
                         There is no requirements
                     @else
-                    <table class="table">
+                    <table class="table mt-3">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
