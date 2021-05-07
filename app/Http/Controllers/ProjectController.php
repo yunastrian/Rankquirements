@@ -80,7 +80,7 @@ class ProjectController extends Controller
             'role' => 1
         ]);
 
-        return redirect()->route('home', ['msg' => 1]);
+        return redirect()->route('home')->with('msg', 'Project added successfully');
     }
 
     /**
@@ -94,7 +94,7 @@ class ProjectController extends Controller
             'role' => 2
         ]);
 
-        return redirect()->route('project', ['id' => $request->projectId, 'msg' => 2]);
+        return redirect()->route('project', ['id' => $request->projectId])->with('msg', 'Member added successfully');
     }
 
     /**
@@ -104,6 +104,6 @@ class ProjectController extends Controller
     {
         DB::table('projects')->increment('phase');
 
-        return redirect()->route('project', ['id' => $request->projectId, 'msg' => 3]);
+        return redirect()->route('project', ['id' => $request->projectId])->with('msg', 'Phase updated successfully');
     }
 }

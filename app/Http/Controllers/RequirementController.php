@@ -32,6 +32,6 @@ class RequirementController extends Controller
             'score' => null
         ]);
 
-        return redirect()->route('project', ['id' => $request->projectId, 'msg' => 1]);
+        return redirect()->route('project', ['id' => $request->projectId])->with('msg', 'Requirement added successfully');
     }
 }

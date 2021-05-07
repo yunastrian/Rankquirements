@@ -2,29 +2,13 @@
 
 @section('content')
 <div class="container">
-    @isset(request()->msg)
-        @if( request()->get('msg') == 1 )
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                Requirement added successfully
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @elseif( request()->get('msg') == 2 )
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                Member added successfully
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @elseif( request()->get('msg') == 3 )
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                Phase updated successfully
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
+    @if(Session::has('msg'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ Session::get('msg') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
     @endisset
     <div class="row justify-content-center">
         <div class="col-md-8">
