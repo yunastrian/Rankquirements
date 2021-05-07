@@ -27,10 +27,16 @@ class PhaseController extends Controller
     {
         $view;
 
+        $project = DB::table('projects')->where('id', $idProject)->first();
+
+        if ($project->phase < $phaseNumber) {
+            abort(404);
+        }
+
         if ($phaseNumber == 1) {
-            $view = PhaseController::phase01View($idProject, $phaseNumber);
+            $view = PhaseController::phase01View($project, $phaseNumber);
         } else if ($phaseNumber == 2) {
-            $view = PhaseController::phase02View($idProject, $phaseNumber);
+            $view = PhaseController::phase02View($project, $phaseNumber);
         } else {
             abort(404);
         }
@@ -41,20 +47,16 @@ class PhaseController extends Controller
     /**
      * Open view first phase.
      */
-    public function phase01View($idProject, $phaseNumber)
+    public function phase01View($project, $phaseNumber)
     {
-        $project = DB::table('projects')->where('id', $idProject)->first();
-
         return view('phase.phase01', ['project' => $project, 'phaseNumber' => $phaseNumber, 'phaseName' => 'Submit value criteria candidate']);
     }
 
     /**
      * Open view second phase.
      */
-    public function phase02View($idProject, $phaseNumber)
+    public function phase02View($project, $phaseNumber)
     {
-        $project = DB::table('projects')->where('id', $idProject)->first();
-
         return view('phase.phase02', ['project' => $project, 'phaseNumber' => $phaseNumber, 'phaseName' => 'Voting value criteria']);
     }
 }
