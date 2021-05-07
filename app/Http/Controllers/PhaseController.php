@@ -31,6 +31,8 @@ class PhaseController extends Controller
             $view = PhaseController::phase01View($idProject, $phaseNumber);
         } else if ($phaseNumber == 2) {
             $view = PhaseController::phase02View($idProject, $phaseNumber);
+        } else {
+            abort(404);
         }
 
         return $view;
