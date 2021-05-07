@@ -28,7 +28,7 @@ Route::get('/project/{idProject}/phase/{phaseNumber}', [PhaseController::class, 
 // POST
 Route::post('/project/add', [ProjectController::class, 'add']);
 Route::post('/project/addmember', [ProjectController::class, 'addMember']);
-Route::post('/project/updatephase', [ProjectController::class, 'updatePhase']);
+Route::post('/project/updatephase', [PhaseController::class, 'updatePhase']);
 Route::post('/requirement/add', [RequirementController::class, 'add']);
 
 // Redirect

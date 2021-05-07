@@ -45,6 +45,16 @@ class PhaseController extends Controller
     }
 
     /**
+     * Update phase
+     */
+    public function updatePhase(Request $request)
+    {
+        DB::table('projects')->increment('phase');
+
+        return redirect()->route('project', ['id' => $request->projectId])->with('msg', 'Phase updated successfully');
+    }
+
+    /**
      * Open view first phase.
      */
     public function phase01View($project, $phaseNumber)

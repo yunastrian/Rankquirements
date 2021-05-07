@@ -96,14 +96,4 @@ class ProjectController extends Controller
 
         return redirect()->route('project', ['id' => $request->projectId])->with('msg', 'Member added successfully');
     }
-
-    /**
-     * Update phase
-     */
-    public function updatePhase(Request $request)
-    {
-        DB::table('projects')->increment('phase');
-
-        return redirect()->route('project', ['id' => $request->projectId])->with('msg', 'Phase updated successfully');
-    }
 }
