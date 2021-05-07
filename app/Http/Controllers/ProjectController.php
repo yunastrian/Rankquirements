@@ -23,6 +23,7 @@ class ProjectController extends Controller
      */
     public function index($id)
     {
+        $project = DB::table('projects')->where('id', $id)->first();
         $requirements = DB::table('requirements')->where('idProject', $id)->get();
         $role = DB::table('userprojects')->where('idProject', $id)->where('idUser', Auth::id())->first()->role;
         $moderatorId = DB::table('userprojects')->where('idProject', $id)->where('role', 1)->first()->idUser;
@@ -60,7 +61,7 @@ class ProjectController extends Controller
             }
         }
 
-        return view('project', ['requirements' => $requirements, 'id' => $id, 'role' => $role, 'moderator' => $moderatorName, 'members' => $memberNames, 'users' => $pickableUsers]);
+        return view('project', ['project' => $project, 'requirements' => $requirements, 'id' => $id, 'role' => $role, 'moderator' => $moderatorName, 'members' => $memberNames, 'users' => $pickableUsers, 'maxPhase' => 5]);
     }
 
     /**
@@ -94,5 +95,15 @@ class ProjectController extends Controller
         ]);
 
         return redirect()->route('project', ['id' => $request->projectId, 'msg' => 2]);
+    }
+
+    /**
+     * Update phase
+     */
+    public function updatePhase(Request $request)
+    {
+        DB::table('projects')->increment('phase');
+
+        return redirect()->route('project', ['id' => $request->projectId, 'msg' => 3]);
     }
 }

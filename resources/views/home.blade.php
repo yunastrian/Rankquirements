@@ -15,19 +15,19 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header font-weight-bold">My Projects</div>
+                <div class="card-header font-weight-bold bg-primary text-white">My Projects</div>
 
                 <div class="card-body">
                     @if(count($projects) == 0)
                         There is no project
                     @else
-                    <table class="table table-striped">
+                    <table class="table">
                         <thead>
-                            <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Project Name</th>
-                            <th scope="col">Role</th>
-                            <th scope="col">Action</th>
+                            <tr class="table-active">
+                                <th scope="col">#</th>
+                                <th scope="col">Project Name</th>
+                                <th scope="col">Role</th>
+                                <th scope="col">Action</th>
                             </tr>
                         </thead>
                         <tbody>

@@ -26,6 +26,7 @@ Route::get('/project/{id}', [ProjectController::class, 'index'])->name('project'
 // POST
 Route::post('/project/add', [ProjectController::class, 'add']);
 Route::post('/project/addmember', [ProjectController::class, 'addMember']);
+Route::post('/project/updatephase', [ProjectController::class, 'updatePhase']);
 Route::post('/requirement/add', [RequirementController::class, 'add']);
 
 // Redirect

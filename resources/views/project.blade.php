@@ -17,20 +17,27 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+        @elseif( request()->get('msg') == 3 )
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                Phase updated successfully
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
         @endif
     @endisset
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header font-weight-bold">Software Requirements</div>
+                <div class="card-header font-weight-bold bg-primary text-white">Software Requirements</div>
 
                 <div class="card-body">
                     @if(count($requirements) == 0)
                         There is no requirements
                     @else
-                    <table class="table table-striped">
+                    <table class="table">
                         <thead>
-                            <tr>
+                            <tr class="table-active">
                                 <th scope="col">#</th>
                                 <th scope="col">Requirement</th>
                                 <th scope="col">Score</th>
@@ -47,58 +54,70 @@
                         </tbody>
                     </table>
                     @endif
-                    
-                    <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#exampleModal">
-                        Add Requirement
-                    </button>
+                    @if($role == 1)
+                        <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#exampleModal">
+                            Add Requirement
+                        </button>
+                    @endif
                 </div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card">
-                <div class="card-header font-weight-bold">Phases</div>
+                <div class="card-header font-weight-bold bg-primary text-white">Phases</div>
 
                 <div class="card-body">
                     <table class="table">
                         <thead>
-                            <tr>
+                            <tr class="table-active">
                                 <th scope="col">Phase</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="table-success">
-                                <th scope="row" class="align-middle">1</th>
-                                <td class="align-middle">Done</td>
-                                <td class="align-middle"><a class="btn btn-primary" href="#" role="button">Open</a></td>
-                            </tr>
-                            <tr class="table-primary">
-                                <th scope="row" class="align-middle">2</th>
-                                <td class="align-middle">WIP</td>
-                                <td class="align-middle"><a class="btn btn-primary" href="#" role="button">Open</a></td>
-                            </tr>
-                            <tr class="table-secondary">
-                                <th scope="row" class="align-middle">3</th>
-                                <td class="align-middle">Closed</td>
-                                <td class="align-middle"><a class="btn btn-primary" href="#" role="button">Open</a></td>
-                            </tr>
-                            <tr class="table-secondary">
-                                <th scope="row" class="align-middle">4</th>
-                                <td class="align-middle">Closed</td>
-                                <td class="align-middle"><a class="btn btn-primary" href="#" role="button">Open</a></td>
-                            </tr>
-                            <tr class="table-secondary">
-                                <th scope="row" class="align-middle">5</th>
-                                <td class="align-middle">Closed</td>
-                                <td class="align-middle"><a class="btn btn-primary" href="#" role="button">Open</a></td>
-                            </tr>
+                            @for($i = 1; $i <= $maxPhase; $i++)   
+                                @if($i < $project->phase)
+                                    <tr class="table-success">
+                                        <th scope="row" class="align-middle">{{ $i }}</th>
+                                        <td class="align-middle">Done</td>
+                                        <td class="align-middle"><a class="btn btn-primary" href="{{ $id }}/phase/{{ $i }}" role="button">Show result</a></td>
+                                    </tr>
+                                @elseif($i == $project->phase)
+                                    <tr class="table-primary">
+                                        <th scope="row" class="align-middle">{{ $i }}</th>
+                                        <td class="align-middle">WIP</td>
+                                        <td class="align-middle"><a class="btn btn-primary" href="{{ $id }}/phase/{{ $i }}" role="button">Open</a></td>
+                                    </tr>
+                                @else
+                                    <tr class="">
+                                        <th scope="row" class="align-middle">{{ $i }}</th>
+                                        <td class="align-middle">Closed</td>
+                                        <td class="align-middle">-</td>
+                                    </tr>
+                                @endif
+                            @endfor
                         </tbody>
                     </table>
+                    @if($project->phase <= $maxPhase)
+                        <form action="/project/updatephase" method="post">
+                        {{ csrf_field() }}
+                            <input type="hidden" id="projectId" name="projectId" value="{{ $id }}">
+                            <button type="submit" class="btn btn-success mt-1">
+                                @if($project->phase == 0)
+                                    Open phase 1
+                                @elseif($project->phase == $maxPhase)
+                                    Finish phase {{ $maxPhase }}
+                                @else
+                                    Finish phase {{ $project->phase }} and open phase {{ $project->phase + 1 }}
+                                @endif
+                            </button>
+                        </form>
+                    @endif
                 </div>
             </div>
             <div class="card mt-4">
-                <div class="card-header font-weight-bold">Participants</div>
+                <div class="card-header font-weight-bold bg-primary text-white">Participants</div>
 
                 <div class="card-body">
                     <h5>Moderator:</h5>
