@@ -28,15 +28,16 @@ class PhaseController extends Controller
         $view;
 
         $project = DB::table('projects')->where('id', $idProject)->first();
+        $userRole = DB::table('userprojects')->where('idProject', $idProject)->where('idUser', Auth::id())->first()->role;
 
         if ($project->phase < $phaseNumber) {
             abort(404);
         }
 
         if ($phaseNumber == 1) {
-            $view = PhaseController::phase01View($project, $phaseNumber);
+            $view = PhaseController::phase01View($project, $phaseNumber, $userRole);
         } else if ($phaseNumber == 2) {
-            $view = PhaseController::phase02View($project, $phaseNumber);
+            $view = PhaseController::phase02View($project, $phaseNumber, $userRole);
         } else {
             abort(404);
         }
@@ -57,16 +58,28 @@ class PhaseController extends Controller
     /**
      * Open view first phase.
      */
-    public function phase01View($project, $phaseNumber)
+    public function phase01View($project, $phaseNumber, $userRole)
     {
-        return view('phase.phase01', ['project' => $project, 'phaseNumber' => $phaseNumber, 'phaseName' => 'Submit value criteria candidate']);
+        if ($userRole == 1) {
+            $results = "Hawo";
+
+            return view('phase.phase01', ['project' => $project, 'phaseNumber' => $phaseNumber, 'phaseName' => 'Submit value criteria candidate', 'role' => $userRole, 'results' => $results]);
+        } else {
+            return view('phase.phase01', ['project' => $project, 'phaseNumber' => $phaseNumber, 'phaseName' => 'Submit value criteria candidate', 'role' => $userRole]);
+        }
     }
 
     /**
      * Open view second phase.
      */
-    public function phase02View($project, $phaseNumber)
+    public function phase02View($project, $phaseNumber, $userRole)
     {
-        return view('phase.phase02', ['project' => $project, 'phaseNumber' => $phaseNumber, 'phaseName' => 'Voting value criteria']);
+        if ($userRole == 1) {
+            $results = "Hawo";
+
+            return view('phase.phase02', ['project' => $project, 'phaseNumber' => $phaseNumber, 'phaseName' => 'Submit value criteria candidate', 'role' => $userRole, 'results' => $results]);
+        } else {
+            return view('phase.phase02', ['project' => $project, 'phaseNumber' => $phaseNumber, 'phaseName' => 'Submit value criteria candidate', 'role' => $userRole]);
+        }
     }
 }
