@@ -17,6 +17,7 @@ class CreateUserprojectsTable extends Migration
             $table->integer('idUser');
             $table->integer('idProject');
             $table->integer('role');
+            $table->integer('phase');
             $table->timestamps();
         });
     }

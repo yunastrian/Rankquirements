@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRequirementsTable extends Migration
+class CreateCriteriaweightsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateRequirementsTable extends Migration
      */
     public function up()
     {
-        Schema::create('requirements', function (Blueprint $table) {
+        Schema::create('criteriaweights', function (Blueprint $table) {
             $table->id();
-            $table->integer('idProject');
-            $table->integer('number');
-            $table->string('name');
-            $table->double('score', 8, 2)->nullable();
+            $table->integer('idUser');
+            $table->integer('idCriteria');
+            $table->integer('weight');
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ class CreateRequirementsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('requirements');
+        Schema::dropIfExists('criteriaweights');
     }
 }
