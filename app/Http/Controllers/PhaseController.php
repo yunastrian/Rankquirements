@@ -38,6 +38,8 @@ class PhaseController extends Controller
             $view = PhaseController::phase01View($project, $phaseNumber, $userRole);
         } else if ($phaseNumber == 2) {
             $view = PhaseController::phase02View($project, $phaseNumber, $userRole);
+        } else if ($phaseNumber == 3) {
+            $view = PhaseController::phase03View($project, $phaseNumber, $userRole);
         } else {
             abort(404);
         }
@@ -214,6 +216,74 @@ class PhaseController extends Controller
         DB::table('userprojects')->where('idUser', Auth::id())->increment('phase');
 
         return redirect()->route('project', ['id' => $request->projectId])->with('msg', 'Phase 2 submitted successfully');
+    }
+
+    /**
+     * Open view first phase.
+     */
+    public function phase03View($project, $phaseNumber, $userRole)
+    {
+        if ($userRole == 1) {
+            $members = DB::table('userprojects')->where('idProject', $project->id)->where('role', 2)->get();
+
+            $users = [];
+            foreach($members as $member) {
+                $user = DB::table('users')->where('id', $member->idUser)->first();
+
+                $status = "Done";
+                if ($member->phase == 3) {
+                    $status = "WIP";
+                }
+
+                $userWithStatus = array(
+                    "name" => $user->name,
+                    "status" => $status
+                );
+    
+                $users[] = $userWithStatus;
+            }
+
+            return view('phase.phase03', ['project' => $project, 'phaseNumber' => $phaseNumber, 'phaseName' => 'Submit Weight of Criteria', 'role' => $userRole, 'users' => $users]);
+        } else {
+            $criterias = DB::table('criterias')->where('idProject', $project->id)->where('used', 1)->get();
+
+            return view('phase.phase03', ['project' => $project, 'phaseNumber' => $phaseNumber, 'phaseName' => 'Submit Weight of Criteria', 'role' => $userRole, 'criterias' => $criterias]);
+        }
+    }
+
+    /**
+     * Submit third phase.
+     */
+    public function phase03Submit(Request $request)
+    {
+        DB::table('criteriaweights')->updateOrInsert(
+            ['idCriteria' => $request->criteria1, 'weight' => $request->weight1],
+            ['idUser' => Auth::id()]
+        );
+
+        DB::table('criteriaweights')->updateOrInsert(
+            ['idCriteria' => $request->criteria2, 'weight' => $request->weight2],
+            ['idUser' => Auth::id()]
+        );
+
+        DB::table('criteriaweights')->updateOrInsert(
+            ['idCriteria' => $request->criteria3, 'weight' => $request->weight3],
+            ['idUser' => Auth::id()]
+        );
+
+        DB::table('criteriaweights')->updateOrInsert(
+            ['idCriteria' => $request->criteria4, 'weight' => $request->weight4],
+            ['idUser' => Auth::id()]
+        );
+
+        DB::table('criteriaweights')->updateOrInsert(
+            ['idCriteria' => $request->criteria5, 'weight' => $request->weight5],
+            ['idUser' => Auth::id()]
+        );
+
+        DB::table('userprojects')->where('idUser', Auth::id())->increment('phase');
+
+        return redirect()->route('project', ['id' => $request->projectId])->with('msg', 'Phase 3 submitted successfully');
     }
 
     /**

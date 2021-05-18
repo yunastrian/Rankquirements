@@ -62,7 +62,7 @@ class ProjectController extends Controller
             }
         }
 
-        return view('project', ['project' => $project, 'requirements' => $requirements, 'id' => $id, 'role' => $role, 'userPhase' => $userPhase, 'moderator' => $moderatorName, 'members' => $memberNames, 'users' => $pickableUsers, 'maxPhase' => 5]);
+        return view('project', ['project' => $project, 'requirements' => $requirements, 'id' => $id, 'role' => $role, 'userPhase' => $userPhase, 'moderator' => $moderatorName, 'members' => $memberNames, 'users' => $pickableUsers, 'maxPhase' => 7]);
     }
 
     /**
