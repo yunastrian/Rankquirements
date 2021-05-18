@@ -50,7 +50,9 @@ class PhaseController extends Controller
      */
     public function updatePhase(Request $request)
     {
-        DB::table('projects')->increment('phase');
+        DB::table('projects')->where('id', $request->projectId)->increment('phase');
+
+        DB::table('userprojects')->where('idProject', $request->projectId)->where('idUser', Auth::id())->increment('phase');
 
         return redirect()->route('project', ['id' => $request->projectId])->with('msg', 'Phase updated successfully');
     }
@@ -61,12 +63,73 @@ class PhaseController extends Controller
     public function phase01View($project, $phaseNumber, $userRole)
     {
         if ($userRole == 1) {
-            $results = "Hawo";
+            $members = DB::table('userprojects')->where('idProject', $project->id)->where('role', 2)->get();
 
-            return view('phase.phase01', ['project' => $project, 'phaseNumber' => $phaseNumber, 'phaseName' => 'Submit value criteria candidate', 'role' => $userRole, 'results' => $results]);
+            $users = [];
+            foreach($members as $member) {
+                $user = DB::table('users')->where('id', $member->idUser)->first();
+
+                $status = "Done";
+                if ($member->phase == 1) {
+                    $status = "WIP";
+                }
+
+                $userWithStatus = array(
+                    "name" => $user->name,
+                    "status" => $status
+                );
+    
+                $users[] = $userWithStatus;
+            }
+
+            return view('phase.phase01', ['project' => $project, 'phaseNumber' => $phaseNumber, 'phaseName' => 'Submit value criteria candidate', 'role' => $userRole, 'users' => $users]);
         } else {
             return view('phase.phase01', ['project' => $project, 'phaseNumber' => $phaseNumber, 'phaseName' => 'Submit value criteria candidate', 'role' => $userRole]);
         }
+    }
+
+    /**
+     * Submit first phase.
+     */
+    public function phase01Submit(Request $request)
+    {
+        DB::table('criterias')->updateOrInsert([
+            'idProject' => $request->projectId,
+            'name' => $request->criteria1,
+            'used' => 0
+        ]);
+
+        DB::table('criterias')->updateOrInsert([
+            'idProject' => $request->projectId,
+            'name' => $request->criteria2,
+            'used' => 0
+        ]);
+
+        DB::table('criterias')->updateOrInsert([
+            'idProject' => $request->projectId,
+            'name' => $request->criteria3,
+            'used' => 0
+        ]);
+
+        if ($request->criteria4 != null) {
+            DB::table('criterias')->updateOrInsert([
+                'idProject' => $request->projectId,
+                'name' => $request->criteria4,
+                'used' => 0
+            ]);
+        }
+
+        if ($request->criteria5 != null) {
+            DB::table('criterias')->updateOrInsert([
+                'idProject' => $request->projectId,
+                'name' => $request->criteria5,
+                'used' => 0
+            ]);
+        }
+
+        DB::table('userprojects')->where('idUser', Auth::id())->increment('phase');
+
+        return redirect()->route('project', ['id' => $request->projectId])->with('msg', 'Phase 1 submitted successfully');
     }
 
     /**

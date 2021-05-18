@@ -2,6 +2,7 @@
 
 @section('childphase')
     @if($role == 1)
+    <!-- ADMIN VIEW -->
         <div class="col-md-12">
             <div class="card mt-4">
                 <div class="card-header font-weight-bold bg-primary text-white">Phase {{ $phaseNumber }}: {{ $phaseName }}</div>
@@ -17,6 +18,7 @@
             </div>
         </div>
     @else
+    <!-- MEMBER VIEW -->
         <div class="col-md-12">
             <div class="card mt-4">
                 <div class="card-header font-weight-bold bg-primary text-white">Phase {{ $phaseNumber }}: {{ $phaseName }}</div>

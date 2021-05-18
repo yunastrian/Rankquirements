@@ -28,6 +28,7 @@ class ProjectController extends Controller
         $role = DB::table('userprojects')->where('idProject', $id)->where('idUser', Auth::id())->first()->role;
         $moderatorId = DB::table('userprojects')->where('idProject', $id)->where('role', 1)->first()->idUser;
         $memberIds = DB::table('userprojects')->where('idProject', $id)->where('role', 2)->pluck('idUser');
+        $userPhase = DB::table('userprojects')->where('idProject', $id)->where('idUser', Auth::id())->first()->phase;
 
         $moderatorName = DB::table('users')->where('id', $moderatorId)->first()->name;
 
@@ -61,7 +62,7 @@ class ProjectController extends Controller
             }
         }
 
-        return view('project', ['project' => $project, 'requirements' => $requirements, 'id' => $id, 'role' => $role, 'moderator' => $moderatorName, 'members' => $memberNames, 'users' => $pickableUsers, 'maxPhase' => 5]);
+        return view('project', ['project' => $project, 'requirements' => $requirements, 'id' => $id, 'role' => $role, 'userPhase' => $userPhase, 'moderator' => $moderatorName, 'members' => $memberNames, 'users' => $pickableUsers, 'maxPhase' => 5]);
     }
 
     /**
@@ -77,7 +78,8 @@ class ProjectController extends Controller
         DB::table('userprojects')->insert([
             'idUser' => Auth::id(),
             'idProject' => $id,
-            'role' => 1
+            'role' => 1,
+            'phase' => 1
         ]);
 
         return redirect()->route('home')->with('msg', 'Project added successfully');
@@ -91,7 +93,8 @@ class ProjectController extends Controller
         DB::table('userprojects')->insert([
             'idUser' => $request->userId,
             'idProject' => $request->projectId,
-            'role' => 2
+            'role' => 2,
+            'phase' => 1
         ]);
 
         return redirect()->route('project', ['id' => $request->projectId])->with('msg', 'Member added successfully');

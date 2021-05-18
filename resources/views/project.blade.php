@@ -72,7 +72,11 @@
                                     <tr class="table-primary">
                                         <th scope="row" class="align-middle">{{ $i }}</th>
                                         <td class="align-middle">WIP</td>
-                                        <td class="align-middle"><a class="btn btn-primary" href="{{ $id }}/phase/{{ $i }}" role="button">Open</a></td>
+                                        @if($userPhase == $project->phase)
+                                            <td class="align-middle"><a class="btn btn-primary" href="{{ $id }}/phase/{{ $i }}" role="button">Open</a></td>
+                                        @else
+                                        <td class="align-middle">-</td>
+                                        @endif
                                     </tr>
                                 @else
                                     <tr class="">
