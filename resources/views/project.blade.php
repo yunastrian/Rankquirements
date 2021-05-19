@@ -18,9 +18,16 @@
                 <div class="card-body">
                     Project name: <span class="font-weight-bold">{{ $project->name }}</span>
                     @if(count($requirements) == 0)
-                        There is no requirements
+                        <br>There is no requirements
                     @else
-                    <table class="table mt-3">
+                    <div class="form-group mt-4 col-md-4">
+                        <label for="sortby">Sort by:</label>
+                        <select class="form-control" id="sortby">
+                            <option value="1" selected>Number</option>
+                            <option value="2">Score</option>
+                        </select>
+                    </div>
+                    <table id="requirementsTable" class="table mt-3">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
@@ -28,7 +35,7 @@
                                 <th scope="col">Score</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="requirementsTableBody">
                         @foreach($requirements as $requirement)
                             <tr>
                                 <th scope="row" class="align-middle">R{{ $requirement->number + 1 }}</th>
@@ -247,4 +254,24 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#sortby").change(function(){
+            if (this.value == 1) {
+                var tbody =$('#requirementsTableBody');
+
+                tbody.find('tr').sort(function(a, b) {
+                    return $('td:first', a).text().localeCompare($('td:first', b).text());
+                }).appendTo(tbody);
+            } else {
+                var tbody =$('#requirementsTableBody');
+
+                tbody.find('tr').sort(function(a, b) {
+                    return $('td:last', b).text().localeCompare($('td:last', a).text());
+                }).appendTo(tbody);
+            }
+        });
+    }); 
+</script>
 @endsection
