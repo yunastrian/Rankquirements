@@ -66,7 +66,7 @@
                                     <tr class="table-success">
                                         <th scope="row" class="align-middle">{{ $i }}</th>
                                         <td class="align-middle">Done</td>
-                                        <td class="align-middle"><a class="btn btn-primary" href="{{ $id }}/phase/{{ $i }}" role="button">Show result</a></td>
+                                        <td class="align-middle">-</td>
                                     </tr>
                                 @elseif($i == $project->phase)
                                     <tr class="table-primary">
