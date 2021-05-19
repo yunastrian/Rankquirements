@@ -62,6 +62,9 @@ class PhaseController extends Controller
             PhaseController::calculateCriteriaVotes($request->projectId);
         } else if ($currentPhaseNumber == 4) {
             PhaseController::calculateCriteriaWeightVotes($request->projectId);
+        } else if ($currentPhaseNumber == 5) {
+            PhaseController::calculateScores($request->projectId);
+            PhaseController::determineScorestatus($request->projectId);
         }
 
         DB::table('projects')->where('id', $request->projectId)->increment('phase');
@@ -401,13 +404,13 @@ class PhaseController extends Controller
                 $users[] = $userWithStatus;
             }
 
-            return view('phase.phase05', ['project' => $project, 'phaseNumber' => $phaseNumber, 'phaseName' => 'Submit Weight of Criteria', 'role' => $userRole, 'users' => $users]);
+            return view('phase.phase05', ['project' => $project, 'phaseNumber' => $phaseNumber, 'phaseName' => 'Submit Score', 'role' => $userRole, 'users' => $users]);
         } else {
             $requirements = DB::table('requirements')->where('idProject', $project->id)->get();
 
             $criterias = DB::table('criterias')->where('idProject', $project->id)->where('used', 1)->get();
 
-            return view('phase.phase05', ['project' => $project, 'phaseNumber' => $phaseNumber, 'phaseName' => 'Submit Weight of Criteria', 'role' => $userRole, 'requirements' => $requirements, 'criterias' => $criterias]);
+            return view('phase.phase05', ['project' => $project, 'phaseNumber' => $phaseNumber, 'phaseName' => 'Submit Score', 'role' => $userRole, 'requirements' => $requirements, 'criterias' => $criterias]);
         }
     }
 
@@ -528,6 +531,73 @@ class PhaseController extends Controller
             $weight = DB::table('criteriaweights')->where('id', $final)->first();
 
             $affected = DB::table('criterias')->where('id', $weight->idCriteria)->update(['weight' => $weight->weight]);
+        }
+    }
+
+    /**
+     * Calculate scores from fifth phase.
+     */
+    public function calculateScores($projectId) 
+    {
+        $requirements = DB::table('requirements')->where('idProject', $projectId)->get();
+
+        $criterias = DB::table('criterias')->where('idProject', $projectId)->where('used', 1)->get();
+            
+        foreach($requirements as $requirement) {
+            foreach($criterias as $criteria) {
+                $scores = DB::table('userscores')->where('idRequirement', $requirement->id)->where('idCriteria', $criteria->id)->get();
+            
+                $sumScore = 0;
+                foreach($scores as $score) {
+                    $sumScore += $score->score;
+                }
+
+                $avgScore = $sumScore / count($scores);
+
+                DB::table('scores')->updateOrInsert([
+                    'idRequirement' => $requirement->id,
+                    'idCriteria' => $criteria->id,
+                    'score' => $avgScore,
+                    'status' => 0
+                ]);
+            }
+        }
+    }
+
+    /**
+     * Determine score status from fifth phase.
+     */
+    public function determineScoreStatus($projectId) 
+    {
+        $requirements = DB::table('requirements')->where('idProject', $projectId)->get();
+
+        $criterias = DB::table('criterias')->where('idProject', $projectId)->where('used', 1)->get();
+        
+        $countMembers = DB::table('userprojects')->where('idProject', $projectId)->where('role', 2)->count();
+
+        $agreementLimit = $countMembers * 2 / 3;
+        $threshold = 1;
+
+        foreach($requirements as $requirement) {
+            foreach($criterias as $criteria) {
+                $score = DB::table('scores')->where('idRequirement', $requirement->id)->where('idCriteria', $criteria->id)->first();
+            
+                $userScores = DB::table('userscores')->where('idRequirement', $requirement->id)->where('idCriteria', $criteria->id)->get();
+
+                $agreementCount = 0;
+                $minVal = $score->score - $threshold;
+                $maxVal = $score->score + $threshold;
+                
+                foreach($userScores as $userScore) {
+                    if (($minVal <= $userScore->score) && ($userScore->score <= $maxVal)) {
+                        $agreementCount += 1;
+                    }
+                }
+
+                if ($agreementCount >= $agreementLimit) {
+                    $affected = DB::table('scores')->where('id', $score->id)->update(['status' => 1]);
+                }
+            }
         }
     }
 }

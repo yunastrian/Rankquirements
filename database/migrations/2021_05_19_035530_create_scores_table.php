@@ -17,7 +17,7 @@ class CreateScoresTable extends Migration
             $table->id();
             $table->integer('idRequirement');
             $table->integer('idCriteria');
-            $table->integer('score');
+            $table->double('score', 8, 2)->nullable();
             $table->integer('status');
             $table->timestamps();
         });
