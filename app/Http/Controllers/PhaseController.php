@@ -42,6 +42,8 @@ class PhaseController extends Controller
             $view = PhaseController::phase03View($project, $phaseNumber, $userRole);
         } else if ($phaseNumber == 4) {
             $view = PhaseController::phase04View($project, $phaseNumber, $userRole);
+        } else if ($phaseNumber == 5) {
+            $view = PhaseController::phase05View($project, $phaseNumber, $userRole);
         } else {
             abort(404);
         }
@@ -372,6 +374,64 @@ class PhaseController extends Controller
         DB::table('userprojects')->where('idUser', Auth::id())->increment('phase');
 
         return redirect()->route('project', ['id' => $request->projectId])->with('msg', 'Phase 4 submitted successfully');
+    }
+
+    /**
+     * Open view fifth phase.
+     */
+    public function phase05View($project, $phaseNumber, $userRole)
+    {
+        if ($userRole == 1) {
+            $members = DB::table('userprojects')->where('idProject', $project->id)->where('role', 2)->get();
+
+            $users = [];
+            foreach($members as $member) {
+                $user = DB::table('users')->where('id', $member->idUser)->first();
+
+                $status = "Done";
+                if ($member->phase == 5) {
+                    $status = "WIP";
+                }
+
+                $userWithStatus = array(
+                    "name" => $user->name,
+                    "status" => $status
+                );
+    
+                $users[] = $userWithStatus;
+            }
+
+            return view('phase.phase05', ['project' => $project, 'phaseNumber' => $phaseNumber, 'phaseName' => 'Submit Weight of Criteria', 'role' => $userRole, 'users' => $users]);
+        } else {
+            $requirements = DB::table('requirements')->where('idProject', $project->id)->get();
+
+            $criterias = DB::table('criterias')->where('idProject', $project->id)->where('used', 1)->get();
+
+            return view('phase.phase05', ['project' => $project, 'phaseNumber' => $phaseNumber, 'phaseName' => 'Submit Weight of Criteria', 'role' => $userRole, 'requirements' => $requirements, 'criterias' => $criterias]);
+        }
+    }
+
+    /**
+     * Submit fifth phase.
+     */
+    public function phase05Submit(Request $request)
+    {
+        $requirements = DB::table('requirements')->where('idProject', $request->projectId)->get();
+
+        for ($i = 1; $i <= count($requirements); $i++) {
+            for ($j = 1; $j <= 5; $j++) {
+                DB::table('userscores')->updateOrInsert([
+                    'idUser' => Auth::id(),
+                    'idRequirement' => $request->input('requirement-' . $i . '-' . $j),
+                    'idCriteria' => $request->input('criteria-' . $i . '-' . $j),
+                    'score' => $request->input('score-' . $i . '-' . $j)
+                ]);
+            }
+        }
+
+        DB::table('userprojects')->where('idUser', Auth::id())->increment('phase');
+
+        return redirect()->route('project', ['id' => $request->projectId])->with('msg', 'Phase 5 submitted successfully');
     }
 
     /**
