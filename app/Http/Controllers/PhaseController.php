@@ -44,6 +44,8 @@ class PhaseController extends Controller
             $view = PhaseController::phase04View($project, $phaseNumber, $userRole);
         } else if ($phaseNumber == 5) {
             $view = PhaseController::phase05View($project, $phaseNumber, $userRole);
+        } else if ($phaseNumber == 6) {
+            $view = PhaseController::phase06View($project, $phaseNumber, $userRole);
         } else {
             abort(404);
         }
@@ -65,6 +67,8 @@ class PhaseController extends Controller
         } else if ($currentPhaseNumber == 5) {
             PhaseController::calculateScores($request->projectId);
             PhaseController::determineScorestatus($request->projectId);
+        } else if ($currentPhaseNumber == 6) {
+            PhaseController::calculateScoreStatusVotes($request->projectId);
         }
 
         DB::table('projects')->where('id', $request->projectId)->increment('phase');
@@ -438,6 +442,88 @@ class PhaseController extends Controller
     }
 
     /**
+     * Open view sixth phase.
+     */
+    public function phase06View($project, $phaseNumber, $userRole)
+    {
+        if ($userRole == 1) {
+            $members = DB::table('userprojects')->where('idProject', $project->id)->where('role', 2)->get();
+
+            $users = [];
+            foreach($members as $member) {
+                $user = DB::table('users')->where('id', $member->idUser)->first();
+
+                $status = "Done";
+                if ($member->phase == 6) {
+                    $status = "WIP";
+                }
+
+                $userWithStatus = array(
+                    "name" => $user->name,
+                    "status" => $status
+                );
+    
+                $users[] = $userWithStatus;
+            }
+
+            $requirements = DB::table('requirements')->where('idProject', $project->id)->get();
+
+            $criterias = DB::table('criterias')->where('idProject', $project->id)->where('used', 1)->get();
+
+            $scores = [];
+
+            foreach($requirements as $requirement) {
+                foreach($criterias as $criteria) {
+                    $score = DB::table('scores')->where('idRequirement', $requirement->id)->where('idCriteria', $criteria->id)->first();
+
+                    $scores[] = $score;
+                }
+            }
+
+            return view('phase.phase06', ['project' => $project, 'phaseNumber' => $phaseNumber, 'phaseName' => 'Vote for Unapproved Score', 'role' => $userRole, 'users' => $users, 'requirements' => $requirements, 'criterias' => $criterias, 'scores' => $scores]);
+        } else {
+            $requirements = DB::table('requirements')->where('idProject', $project->id)->get();
+
+            $criterias = DB::table('criterias')->where('idProject', $project->id)->where('used', 1)->get();
+
+            $scores = [];
+            $isAllApproved = true;
+
+            foreach($requirements as $requirement) {
+                foreach($criterias as $criteria) {
+                    $score = DB::table('scores')->where('idRequirement', $requirement->id)->where('idCriteria', $criteria->id)->first();
+
+                    if ($score->status == 0) {
+                        $isAllApproved = false;
+                    }
+
+                    $scores[] = $score;
+                }
+            }
+
+            return view('phase.phase06', ['project' => $project, 'phaseNumber' => $phaseNumber, 'phaseName' => 'Vote for Unapproved Score', 'role' => $userRole, 'requirements' => $requirements, 'criterias' => $criterias, 'scores' => $scores, 'isAllApproved' => $isAllApproved]);
+        }
+    }
+
+    /**
+     * Submit sixth phase.
+     */
+    public function phase06Submit(Request $request)
+    {
+        foreach($request->scoreId as $index => $id) {
+            DB::table('scorevotes')->updateOrInsert([
+                'idUser' => Auth::id(),
+                'idScore' => $id,
+                'vote' => $request->scoreVal[$index]
+            ]);
+        }
+
+        DB::table('userprojects')->where('idUser', Auth::id())->increment('phase');
+
+        return redirect()->route('project', ['id' => $request->projectId])->with('msg', 'Phase 6 submitted successfully');
+    }
+
+    /**
      * Calculate criteria votes from second phase.
      */
     public function calculateCriteriaVotes($projectId) 
@@ -598,6 +684,47 @@ class PhaseController extends Controller
                     $affected = DB::table('scores')->where('id', $score->id)->update(['status' => 1]);
                 }
             }
+        }
+    }
+
+    /**
+     * Calculate criteria weight votes from fourth phase.
+     */
+    public function calculateScoreStatusVotes($projectId) 
+    {
+        $requirements = DB::table('requirements')->where('idProject', $projectId)->get();
+
+        $criterias = DB::table('criterias')->where('idProject', $projectId)->where('used', 1)->get();
+        
+        $scores = [];
+        $countMembers = DB::table('userprojects')->where('idProject', $projectId)->where('role', 2)->count();
+        $agreementLimit = $countMembers * 2 / 3;
+
+        foreach($requirements as $requirement) {
+            foreach($criterias as $criteria) {
+                $score = DB::table('scores')->where('idRequirement', $requirement->id)->where('idCriteria', $criteria->id)->where('status', 0)->first();
+
+                if($score) {
+                    $scores[] = $score;
+                }
+            }
+        }
+
+        $scoreVotes = DB::table('scoreVotes')->get();
+
+        $finalStatus = [];
+        foreach($scores as $score) {
+            $vote = 0;
+
+            foreach($scoreVotes as $scoreVote) {
+                if ($score->id == $scoreVote->idScore) {
+                    $vote += $scoreVote->vote;
+                }
+            }
+
+            if ($vote > $agreementLimit) {
+                $affected = DB::table('scores')->where('id', $score->id)->update(['status' => 1]);
+            }            
         }
     }
 }
