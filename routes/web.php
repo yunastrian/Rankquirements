@@ -35,6 +35,7 @@ Route::post('/project/phase/03', [PhaseController::class, 'phase03Submit']);
 Route::post('/project/phase/04', [PhaseController::class, 'phase04Submit']);
 Route::post('/project/phase/05', [PhaseController::class, 'phase05Submit']);
 Route::post('/project/phase/06', [PhaseController::class, 'phase06Submit']);
+Route::post('/project/phase/07', [PhaseController::class, 'phase07Submit']);
 Route::post('/requirement/add', [RequirementController::class, 'add']);
 
 // Redirect
