@@ -30,6 +30,18 @@ class ProjectController extends Controller
         $memberIds = DB::table('userprojects')->where('idProject', $id)->where('role', 2)->pluck('idUser');
         $userPhase = DB::table('userprojects')->where('idProject', $id)->where('idUser', Auth::id())->first()->phase;
 
+        $criterias = DB::table('criterias')->where('idProject', $id)->where('used', 1)->get();
+
+        $scores = [];
+
+        foreach($requirements as $requirement) {
+            foreach($criterias as $criteria) {
+                $score = DB::table('scores')->where('idRequirement', $requirement->id)->where('idCriteria', $criteria->id)->first();
+
+                $scores[] = $score;
+            }
+        }
+
         $moderatorName = DB::table('users')->where('id', $moderatorId)->first()->name;
 
         $memberNames = [];
@@ -62,7 +74,7 @@ class ProjectController extends Controller
             }
         }
 
-        return view('project', ['project' => $project, 'requirements' => $requirements, 'id' => $id, 'role' => $role, 'userPhase' => $userPhase, 'moderator' => $moderatorName, 'members' => $memberNames, 'users' => $pickableUsers, 'maxPhase' => 7]);
+        return view('project', ['project' => $project, 'requirements' => $requirements, 'criterias' => $criterias, 'scores' => $scores, 'id' => $id, 'role' => $role, 'userPhase' => $userPhase, 'moderator' => $moderatorName, 'members' => $memberNames, 'users' => $pickableUsers, 'maxPhase' => 7]);
     }
 
     /**

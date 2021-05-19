@@ -39,9 +39,14 @@
                         </tbody>
                     </table>
                     @endif
-                    @if($role == 1)
+                    @if(($role == 1) && ($project->phase == 0))
                         <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#exampleModal">
                             Add Requirement
+                        </button>
+                    @endif
+                    @if($project->phase > $maxPhase)
+                        <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#detailedResult">
+                            Show detail
                         </button>
                     @endif
                 </div>
@@ -190,6 +195,53 @@
                             <button type="submit" class="btn btn-success">Submit</button>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Result Detail Modal -->
+        <div class="modal fade" id="detailedResult" tabindex="-1" aria-labelledby="detailedResult" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="detailedResult">Result Detail</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Requirement</th>
+                                    @foreach($criterias as $criteria)
+                                        <th scope="col">{{$criteria->name}} ({{$criteria->weight}})</th>
+                                    @endforeach
+                                    <th scope="col">Final Score</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($requirements as $indexR => $requirement)
+                                <tr>
+                                    <th scope="row" class="align-middle">R{{ $requirement->number + 1 }}</th>
+                                    <td class="align-middle">{{ $requirement->name }}</td>
+                                    @foreach($criterias as $indexC => $criteria)
+                                        @foreach($scores as $score)
+                                            @if (($score->idRequirement == $requirement->id) && ($score->idCriteria == $criteria->id))
+                                                <td class="align-middle {{ $score->status == 1 ? 'table-success' : ''  }}">{{ $score->score }}</td>
+                                            @endif
+                                        @endforeach  
+                                    @endforeach
+                                    <th class="align-middle table-success">{{ $requirement->score }}</th>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
                 </div>
             </div>
         </div>
