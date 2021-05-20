@@ -59,7 +59,7 @@
                                     <th scope="col">#</th>
                                     <th scope="col">Requirement</th>
                                     @foreach($criterias as $criteria)
-                                        <th scope="col">{{$criteria->name}}</th>
+                                        <th scope="col">{{$criteria->name}} ({{ $criteria->weight }})</th>
                                     @endforeach
                                 </tr>
                             </thead>
