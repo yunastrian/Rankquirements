@@ -91,7 +91,7 @@ class ProjectController extends Controller
             'idUser' => Auth::id(),
             'idProject' => $id,
             'role' => 1,
-            'phase' => 1
+            'phase' => 0
         ]);
 
         return redirect()->route('home')->with('msg', 'Project added successfully');
