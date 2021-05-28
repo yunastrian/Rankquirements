@@ -756,7 +756,7 @@ class PhaseController extends Controller
             }
         }
 
-        $scoreVotes = DB::table('scoreVotes')->get();
+        $scoreVotes = DB::table('scorevotes')->get();
 
         $finalStatus = [];
         foreach($scores as $score) {
