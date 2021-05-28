@@ -38,7 +38,9 @@ class ProjectController extends Controller
             foreach($criterias as $criteria) {
                 $score = DB::table('scores')->where('idRequirement', $requirement->id)->where('idCriteria', $criteria->id)->first();
 
-                $scores[] = $score;
+                if ($score) {
+                    $scores[] = $score;   
+                }
             }
         }
 
