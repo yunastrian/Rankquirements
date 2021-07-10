@@ -77,8 +77,12 @@ class PhaseController extends Controller
 
         DB::table('projects')->where('id', $request->projectId)->increment('phase');
 
-        DB::table('userprojects')->where('idProject', $request->projectId)->where('idUser', Auth::id())->increment('phase');
-
+        if ($currentPhaseNumber == 2) {
+            DB::table('userprojects')->where('idProject', $request->projectId)->increment('phase');
+        } else {
+            DB::table('userprojects')->where('idProject', $request->projectId)->where('idUser', Auth::id())->increment('phase');
+        }
+        
         return redirect()->route('project', ['id' => $request->projectId])->with('msg', 'Phase updated successfully');
     }
 
@@ -152,7 +156,7 @@ class PhaseController extends Controller
             ]);
         }
 
-        DB::table('userprojects')->where('idUser', Auth::id())->increment('phase');
+        DB::table('userprojects')->where('idProject', $request->projectId)->where('idUser', Auth::id())->increment('phase');
 
         return redirect()->route('project', ['id' => $request->projectId])->with('msg', 'Phase 1 submitted successfully');
     }
@@ -179,6 +183,8 @@ class PhaseController extends Controller
                 DB::table('criterias')->where('id', $criteria->id)->delete();
             }
         }
+
+        return redirect()->route('project', ['id' => $request->projectId])->with('msg', 'Phase 2 submitted successfully');
     }
 
     /**
@@ -254,7 +260,7 @@ class PhaseController extends Controller
             ]);
         }
 
-        DB::table('userprojects')->where('idUser', Auth::id())->increment('phase');
+        DB::table('userprojects')->where('idProject', $request->projectId)->where('idUser', Auth::id())->increment('phase');
 
         return redirect()->route('project', ['id' => $request->projectId])->with('msg', 'Phase 3 submitted successfully');
     }
@@ -322,7 +328,7 @@ class PhaseController extends Controller
             ['idUser' => Auth::id()]
         );
 
-        DB::table('userprojects')->where('idUser', Auth::id())->increment('phase');
+        DB::table('userprojects')->where('idProject', $request->projectId)->where('idUser', Auth::id())->increment('phase');
 
         return redirect()->route('project', ['id' => $request->projectId])->with('msg', 'Phase 4 submitted successfully');
     }
@@ -380,7 +386,7 @@ class PhaseController extends Controller
             }
         }
 
-        DB::table('userprojects')->where('idUser', Auth::id())->increment('phase');
+        DB::table('userprojects')->where('idProject', $request->projectId)->where('idUser', Auth::id())->increment('phase');
 
         return redirect()->route('project', ['id' => $request->projectId])->with('msg', 'Phase 5 submitted successfully');
     }
@@ -462,7 +468,7 @@ class PhaseController extends Controller
             ]);
         }
 
-        DB::table('userprojects')->where('idUser', Auth::id())->increment('phase');
+        DB::table('userprojects')->where('idProject', $request->projectId)->where('idUser', Auth::id())->increment('phase');
 
         return redirect()->route('project', ['id' => $request->projectId])->with('msg', 'Phase 6 submitted successfully');
     }
@@ -504,7 +510,7 @@ class PhaseController extends Controller
             $affected = DB::table('scores')->where('id', $id)->update(['score' => $request->scoreVal[$index]]);
         }
 
-        DB::table('userprojects')->where('idUser', Auth::id())->increment('phase');
+        DB::table('userprojects')->where('idProject', $request->projectId)->where('idUser', Auth::id())->increment('phase');
 
         return redirect()->route('project', ['id' => $request->projectId])->with('msg', 'Phase 7 submitted successfully');
     }
