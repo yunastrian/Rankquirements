@@ -162,7 +162,9 @@ class PhaseController extends Controller
      */
     public function phase02View($project, $phaseNumber, $userRole)
     {
-        // To do
+        $criterias = DB::table('criterias')->where('idProject', $project->id)->get();
+            
+        return view('phase.phase02', ['project' => $project, 'phaseNumber' => $phaseNumber, 'phaseName' => 'Similar Criteria Elimination', 'role' => $userRole, 'criterias' => $criterias]);
     }
 
     /**
@@ -170,7 +172,13 @@ class PhaseController extends Controller
      */
     public function phase02Submit(Request $request)
     {
-        // To do
+        $criterias = DB::table('criterias')->where('idProject', $request->projectId)->get();
+
+        foreach ($criterias as $criteria) {
+            if ($request->input('c' . $criteria->id) == 1) {
+                DB::table('criterias')->where('id', $criteria->id)->delete();
+            }
+        }
     }
 
     /**
