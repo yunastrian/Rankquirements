@@ -65,7 +65,7 @@ class PhaseController extends Controller
         if ($currentPhaseNumber == 3) {
             PhaseController::calculateCriteriaVotes($request->projectId);
         } else if ($currentPhaseNumber == 4) {
-            //PhaseController::calculateCriteriaWeightVotes($request->projectId);
+            PhaseController::calculateCriteriaWeightVotes($request->projectId);
         } else if ($currentPhaseNumber == 5) {
             PhaseController::calculateScores($request->projectId);
             PhaseController::determineScorestatus($request->projectId);
@@ -327,6 +327,37 @@ class PhaseController extends Controller
             ['idCriteria' => $request->criteria5, 'weight' => $request->weight5],
             ['idUser' => Auth::id()]
         );
+
+        $id1 = DB::table('criteriaweights')->where('idCriteria', $request->criteria1)->where('weight', $request->weight1)->first()->id;
+        $id2 = DB::table('criteriaweights')->where('idCriteria', $request->criteria2)->where('weight', $request->weight2)->first()->id;
+        $id3 = DB::table('criteriaweights')->where('idCriteria', $request->criteria3)->where('weight', $request->weight3)->first()->id;
+        $id4 = DB::table('criteriaweights')->where('idCriteria', $request->criteria4)->where('weight', $request->weight4)->first()->id;
+        $id5 = DB::table('criteriaweights')->where('idCriteria', $request->criteria5)->where('weight', $request->weight5)->first()->id;
+        
+        DB::table('criteriaweightvotes')->updateOrInsert([
+            'idUser' => Auth::id(),
+            'idWeight' => $id1
+        ]);
+
+        DB::table('criteriaweightvotes')->updateOrInsert([
+            'idUser' => Auth::id(),
+            'idWeight' => $id2
+        ]);
+
+        DB::table('criteriaweightvotes')->updateOrInsert([
+            'idUser' => Auth::id(),
+            'idWeight' => $id3
+        ]);
+
+        DB::table('criteriaweightvotes')->updateOrInsert([
+            'idUser' => Auth::id(),
+            'idWeight' => $id4
+        ]);
+
+        DB::table('criteriaweightvotes')->updateOrInsert([
+            'idUser' => Auth::id(),
+            'idWeight' => $id5
+        ]);
 
         DB::table('userprojects')->where('idProject', $request->projectId)->where('idUser', Auth::id())->increment('phase');
 
