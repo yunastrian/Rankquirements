@@ -260,15 +260,15 @@
         $("#sortby").change(function(){
             if (this.value == 1) {
                 var tbody =$('#requirementsTableBody');
-
+                
                 tbody.find('tr').sort(function(a, b) {
-                    return $('td:first', a).text().localeCompare($('td:first', b).text());
+                    return $('th', a).text().localeCompare($('th', b).text(), 'en', {numeric: true});
                 }).appendTo(tbody);
             } else {
                 var tbody =$('#requirementsTableBody');
 
                 tbody.find('tr').sort(function(a, b) {
-                    return $('td:last', b).text().localeCompare($('td:last', a).text());
+                    return $('td:last', b).text().localeCompare($('td:last', a).text(), 'en', {numeric: true});
                 }).appendTo(tbody);
             }
         });
