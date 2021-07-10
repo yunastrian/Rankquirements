@@ -50,4 +50,13 @@
             </form>
         </div>
     </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("form").submit(function () {
+                $(".btn-success").attr("disabled", true);
+                return true;
+            });
+        }); 
+    </script>
 @endsection
