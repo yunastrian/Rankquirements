@@ -42,46 +42,36 @@
 
                     <div class="card-body">
                         <b>Instruction:</b> <br>
-                        Select weight that you think are most suitable for each criteria
+                        Submit the weight for each criteria<br>
+                        Rules:
+                        <ul>
+                            <li>1: very unimportant</li>
+                            <li>10: very important</li>
+                        <ul>
                     </div>
 
                     <div class="card-body">
-                        @for ($i = 0; $i < count($weights); $i++)
-                            <div class="row justify-content-around">
-                                <div class="col-md-4">
-                                    Criteria: <b>{{ $criterias[$i]->name }}</b>
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">#</th>
-                                                <th scope="col">Proposed Weight</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        @foreach($weights[$i] as $index => $weight)
-                                            <tr>
-                                                <th scope="row" class="align-middle">{{ $index + 1 }}</th>
-                                                <td class="align-middle">{{ $weight->weight }}</td>
-                                            </tr>
-                                        @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="weight{{ $i + 1 }}">Weight for criteria <b>{{ $criterias[$i]->name }}</b></label>
-                                        <select class="form-control" id="weight{{ $i + 1 }}" name="weight{{ $i + 1 }}">
-                                            <option></option>
-                                            @foreach($weights[$i] as $index => $weight)
-                                                <option value="{{ $weight->id }}">{{ $weight->weight }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        @endfor
-
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Criteria</th>
+                                    <th scope="col">Proposed Weight</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($criterias as $index => $criteria)
+                                <tr>
+                                    <th scope="row" class="align-middle">{{ $index + 1 }}</th>
+                                    <td class="align-middle">{{ $criteria->name }}</td>
+                                    <td class="align-middle">
+                                        <input type="hidden" name="criteria{{ $index + 1 }}" value="{{ $criteria->id }}">
+                                        <input type="number" class="form-control col-md-2" required="required" id="weight{{ $index + 1 }}" name="weight{{ $index + 1 }}" min="1" max="10">
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
                         <input type="hidden" id="projectId" name="projectId" value="{{ $project->id }}">
                     </div>
 
